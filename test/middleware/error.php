@@ -1,8 +1,8 @@
 <?php
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../vendor/autoload.php";
 
 use function ff\{middleware, test, container};
-use function ff\middleware\web\error;
+use function ff\web\middleware\error;
 
 test('error: 正常执行返回结果', function() {
     return middleware(error(), 'ok');

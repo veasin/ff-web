@@ -1,9 +1,9 @@
 <?php
 // cors.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../vendor/autoload.php";
 
 use function ff\{container, middleware, test};
-use function ff\middleware\web\cors;
+use function ff\web\middleware\cors;
 
 test('cors: 设置默认跨域头',
 	function(){

@@ -15,19 +15,26 @@
 	"veasin/ff":">=0.3.1"
   },
   "autoload":{
+	"psr-4":{
+	  "ff\\web\\":"src/"
+	},
 	"files":[
-	  "src/cors.php",
-	  "src/csrf.php",
-	  "src/error.php",
-	  "src/gzip.php",
-	  "src/json.php",
-	  "src/log.php",
-	  "src/rate.php",
-	  "src/serve.php",
-	  "src/auth/basic.php",
-	  "src/auth/token.php",
-	  "src/auth/jwt.php",
-	  "src/auth/apikey.php"
+	  "src/middleware/cors.php",
+	  "src/middleware/csrf.php",
+	  "src/middleware/error.php",
+	  "src/middleware/gzip.php",
+	  "src/middleware/json.php",
+	  "src/middleware/log.php",
+	  "src/middleware/rate.php",
+	  "src/middleware/serve.php",
+	  "src/middleware/auth/basic.php",
+	  "src/middleware/auth/token.php",
+	  "src/middleware/auth/jwt.php",
+	  "src/middleware/auth/apikey.php",
+	  "src/user.php",
+	  "src/user/session.php",
+	  "src/user/token.php",
+	  "src/user/jwt.php"
 	]
   }
 }

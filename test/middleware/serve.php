@@ -1,9 +1,9 @@
 <?php
 // serve.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../vendor/autoload.php";
 
 use function ff\{middleware, test, container, from};
-use function ff\middleware\web\serve;
+use function ff\web\middleware\serve;
 
 $testDir = __DIR__ . '/_test_static';
 @mkdir($testDir, 0755, true);

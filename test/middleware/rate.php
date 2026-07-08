@@ -1,9 +1,9 @@
 <?php
 // rate.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../vendor/autoload.php";
 
 use function ff\{middleware, test, container, from};
-use function ff\middleware\web\rate;
+use function ff\web\middleware\rate;
 
 test('rate: 允许通过请求',
 	function(){

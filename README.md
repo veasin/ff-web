@@ -8,12 +8,109 @@ composer require veasin/ff-web
 
 ---
 
+## user($data, $storage) — 用户凭证管理
+
+统一凭证生命周期管理：记录、读取、检测、销毁用户凭证。支持多个独立 storage（default / session / token / jwt）。
+
+```php
+use function ff\web\{user};
+
+user();                              // 从默认 storage 读取当前用户
+user($userData);                     // 记录用户到默认 storage，返回 token
+user(true);                          // 检测默认 storage 是否有凭证
+user(false);                         // 销毁默认 storage 的凭证
+user($userData, 'session');          // 指定 storage 写入
+user(null, 'jwt');                   // 从 jwt storage 读取
+```
+
+容器配置——storage 需注册 `#user.{name}`，包含五个回调：
+
+| 键 | 签名 | 用途 |
+|---|---|---|
+| `token` | `fn(): ?string` | 读取当前请求携带的凭证 |
+| `read` | `fn(string $token): ?array` | 用 token 恢复用户数据 |
+| `check` | `fn(string $token): bool` | 检测 token 是否有效 |
+| `write` | `fn(object\|array $user): string` | 持久化用户数据，返回新 token |
+| `destroy` | `fn(string $token): void` | 销毁凭证 |
+
+```php
+// 默认 storage：基于 session
+container('#user.default', user\session());
+
+// 自定义 storage：基于 token
+container('#user.token', user\token(
+    fn(string $token): ?array => lookupUserByToken($token)
+));
+
+// 自定义 storage：基于 JWT
+container('#user.jwt', user\jwt('your-secret-key', ttl: 3600));
+```
+
+---
+
+## user\session() — Session 凭证 storage
+
+基于 PHP 原生 session 的凭证存储，零外部依赖。`token` 返回 `session_id()`，数据存储在 `$_SESSION['#user']`。
+
+```php
+use function ff\web\user\session;
+
+container('#user.default', user\session());
+```
+
+---
+
+## user\token($provider, $ttl, $prefix) — Token 凭证 storage
+
+通过 `$provider` 回调接入 Redis/APCu/DB 等任意存储后端。自动从 `Authorization: Bearer` 头提取 token，生成 64 位随机 hex token。
+
+```php
+use function ff\web\user\token;
+
+// Redis 后端
+container('#user.default', user\token(
+    fn(string $op, string $key, ...$a) => match($op){
+        'get' => redis($key),
+        'set' => redis($key, $a[0], $a[1] ?? 86400),
+        'del' => redis($key, null),
+    },
+));
+```
+
+参数：
+- **`$provider`**: `callable` 必填 存储回调，签名：
+  - `'get'` → `fn(string $key): ?string` — 读
+  - `'set'` → `fn(string $key, string $data, ?int $ttl): void` — 写
+  - `'del'` → `fn(string $key): void` — 删
+- **`$ttl`**: `int` 默认 `86400` token 过期秒数
+- **`$prefix`**: `string` 默认 `'ff_ut:'` token 存储 key 前缀
+
+---
+
+## user\jwt($secret, $ttl, $algo) — JWT 凭证 storage
+
+纯 PHP 实现 HS256 JWT，零外部依赖。自动从 `Authorization: Bearer` 头提取 token，payload 内嵌 `user` 数据和 `exp`/`iat` 声明。
+
+```php
+use function ff\web\user\jwt;
+
+container('#user.default', user\jwt('my-secret-key'));
+container('#user.default', user\jwt('my-secret-key', ttl: 3600, algo: 'HS256'));
+```
+
+参数：
+- **`$secret`**: `string` 必填 HMAC 签名密钥
+- **`$ttl`**: `int` 默认 `86400` token 过期秒数
+- **`$algo`**: `string` 默认 `'HS256'` 算法，当前仅支持 `HS256`
+
+---
+
 所有预制中间件返回 `callable`，直接传入 `middleware()` 或 `hump()` 使用：
 
 ```php
-use function ff\middleware\web\{cors, serve, json};
-use function ff\middleware\web\auth\{basic, token, jwt, apikey};
-use function ff\middleware\web\{csrf, error, gzip, log as mw_log, rate};
+use function ff\web\middleware\{cors, serve, json};
+use function ff\web\middleware\auth\{basic, token, jwt, apikey};
+use function ff\web\middleware\{csrf, error, gzip, log as mw_log, rate};
 
 middleware(cors(), basic(), log(), $handler);
 ```
@@ -25,7 +122,7 @@ middleware(cors(), basic(), log(), $handler);
 从 `Authorization: Basic` 头提取用户名密码，调用验证器。验证器返回值直接存入 user（可返回用户对象而非 `true`），支持密码含冒号。
 
 ```php
-use function ff\middleware\web\auth\basic;
+use function ff\web\middleware\auth\basic;
 container('#web/auth/validators', [fn($user, $pass) => $user]);//设置验证器
 middleware(basic(), $handler);//使用中间件
 container('#web/auth/user');//获取认证用户
@@ -46,7 +143,7 @@ container('#web/auth/user');//获取认证用户
 从请求头或 URL 查询参数 `?token=` 提取 token，调用验证器。
 
 ```php
-use function ff\middleware\web\auth\token;
+use function ff\web\middleware\auth\token;
 container('#web/auth/validators', [fn($token) => $user]);//设置验证器
 middleware(token(), $handler);//使用中间件，从 Authorization 头提取
 middleware(token('#web/auth', 'X-Auth-Token'), $handler);//自定义请求头
@@ -67,7 +164,7 @@ middleware(token('#web/auth', 'X-Auth-Token'), $handler);//自定义请求头
 从 `Authorization: Bearer <token>` 提取 JWT，HMAC 验证签名后解码 payload。
 
 ```php
-use function ff\middleware\web\auth\jwt;
+use function ff\web\middleware\auth\jwt;
 container('#web/auth/secret', 'your-secret-key');//设置 HMAC 签名密钥
 container('#web/auth/validators', [fn($payload) => $user]);//设置验证器
 middleware(jwt(), $handler);//使用中间件
@@ -92,7 +189,7 @@ container('#web/auth/user');//获取认证用户
 从请求头或 URL 查询参数提取 API Key，调用验证器。
 
 ```php
-use function ff\middleware\web\auth\apikey;
+use function ff\web\middleware\auth\apikey;
 container('#web/auth/validators', [fn($apiKey) => $user]);//设置验证器
 middleware(apikey(), $handler);//使用中间件
 ```

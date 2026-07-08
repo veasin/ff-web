@@ -1,9 +1,9 @@
 <?php
 // basic.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../../vendor/autoload.php";
 
 use function ff\{container, middleware, test};
-use function ff\middleware\web\auth\basic;
+use function ff\web\middleware\auth\basic;
 
 test('auth_basic: 未认证返回401',
 	function(){

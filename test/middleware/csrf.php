@@ -1,9 +1,9 @@
 <?php
 // csrf.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../vendor/autoload.php";
 
 use function ff\{container, middleware, test};
-use function ff\middleware\web\csrf;
+use function ff\web\middleware\csrf;
 
 test('csrf: 生成 token',
 	function(){

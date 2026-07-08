@@ -1,5 +1,5 @@
 <?php
-namespace ff\middleware\web;
+namespace ff\web\middleware;
 use function ff\{from, container, log as flog};
 
 function log(string $level = 'info'): callable{

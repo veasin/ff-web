@@ -1,9 +1,9 @@
 <?php
 // apikey.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../../vendor/autoload.php";
 
 use function ff\{container, middleware, test};
-use function ff\middleware\web\auth\apikey;
+use function ff\web\middleware\auth\apikey;
 
 test('apikey: 无 apiKey 返回401',
 	function(){

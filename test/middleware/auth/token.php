@@ -1,9 +1,9 @@
 <?php
 // token.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../../vendor/autoload.php";
 
 use function ff\{container, middleware, test};
-use function ff\middleware\web\auth\token;
+use function ff\web\middleware\auth\token;
 
 test('token: 无 token 返回401',
 	function(){

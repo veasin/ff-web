@@ -1,9 +1,9 @@
 <?php
 // log.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../vendor/autoload.php";
 
 use function ff\{middleware, test, container, log as flog};
-use function ff\middleware\web\log as mw_log;
+use function ff\web\middleware\log as mw_log;
 
 $logged = [];
 container('^#ext.log.test', function($level, $message, $context) use (&$logged){

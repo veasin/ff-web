@@ -1,9 +1,9 @@
 <?php
 // jwt.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../../vendor/autoload.php";
 
 use function ff\{container, middleware, test};
-use function ff\middleware\web\auth\jwt;
+use function ff\web\middleware\auth\jwt;
 
 function createJwt(string $secret, array $payload, string $algo = 'HS256'): string{
 	$header = ['typ' => 'JWT', 'alg' => $algo];

@@ -1,9 +1,9 @@
 <?php
 // gzip.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../vendor/autoload.php";
 
 use function ff\{middleware, test, container};
-use function ff\middleware\web\gzip;
+use function ff\web\middleware\gzip;
 
 test('gzip: 不压缩空结果', function() {
     container('#in.headers', null);

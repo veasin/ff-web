@@ -1,5 +1,5 @@
 <?php
-namespace ff\middleware\web;
+namespace ff\web\middleware;
 use function ff\{from, container, output};
 
 function gzip(int $level = 6): callable{

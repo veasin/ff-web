@@ -1,9 +1,9 @@
 <?php
 // json.php 测试
-include __DIR__ . "/../vendor/autoload.php";
+include __DIR__ . "/../../vendor/autoload.php";
 
 use function ff\{middleware, test, container};
-use function ff\middleware\web\json;
+use function ff\web\middleware\json;
 
 test('json: null返回null', function() {
     return middleware(json(), null);
@@ -21,4 +21,5 @@ test('json: 设置Content-Type', function() {
     middleware(json(), ['test' => 123]);
     return container('#out.response.headers.Content-Type');
 }, fn($v) => str_contains($v ?? '', 'application/json'));
+container('#out.render', fn() => null);
 test();

@@ -1,5 +1,5 @@
 <?php
-namespace ff\middleware\web\auth;
+namespace ff\web\middleware\auth;
 
 use function ff\{container, from, output, i18n};
 

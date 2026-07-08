@@ -1,5 +1,5 @@
 <?php
-namespace ff\middleware\web;
+namespace ff\web\middleware;
 
 use function ff\{container, from, output, i18n};
 
