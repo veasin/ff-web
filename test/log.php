@@ -1,0 +1,56 @@
+<?php
+// log.php 测试
+include __DIR__ . "/../vendor/autoload.php";
+
+use function ff\{middleware, test, container, log as flog};
+use function ff\middleware\web\log as mw_log;
+
+$logged = [];
+container('^#ext.log.test', function($level, $message, $context) use (&$logged){
+	$logged[] = ['level' => $level, 'message' => $message, 'context' => $context];
+});
+
+test('log: 记录请求方法',
+	function() use (&$logged){
+		$logged = [];
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		container('#out.response', null);
+		container('#in.input', null);
+		middleware(mw_log(), 'ok');
+		return $logged[0]['message']['method'] ?? null;
+	},
+	'cli');
+
+test('log: 记录响应状态',
+	function() use (&$logged){
+		$logged = [];
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		container('#out.response', ['code' => 200, 'body' => 'ok']);
+		container('#in.input', null);
+		middleware(mw_log(), 'ok');
+		return $logged[0]['message']['status'] ?? null;
+	},
+	200);
+
+test('log: 记录执行时间',
+	function() use (&$logged){
+		$logged = [];
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		container('#out.response', null);
+		container('#in.input', null);
+		middleware(mw_log(), 'ok');
+		return $logged[0]['message']['duration_ms'] ?? null;
+	},
+	fn($v) => $v >= 0);
+
+test('log: 使用指定级别',
+	function() use (&$logged){
+		$logged = [];
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		container('#out.response', null);
+		container('#in.input', null);
+		middleware(mw_log('warning'), 'ok');
+		return $logged[0]['level'] ?? null;
+	},
+	'warning');
+test();

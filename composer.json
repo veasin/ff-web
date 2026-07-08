@@ -1,0 +1,33 @@
+{
+  "name":"veasin/ff-web",
+  "description":"Web middleware collection for ff — CORS, CSRF, gzip, JSON, logging, rate limiter, static file serving, and auth (Basic/Token/JWT/API Key)",
+  "homepage":"https://github.com/veasin/ff",
+  "type":"library",
+  "license":"LGPL-3.0-or-later",
+  "authors":[
+	{
+	  "name":"Vea",
+	  "email":"vea@live.cn"
+	}
+  ],
+  "require":{
+	"php":">=8.4",
+	"veasin/ff":">=0.3.1"
+  },
+  "autoload":{
+	"files":[
+	  "src/cors.php",
+	  "src/csrf.php",
+	  "src/error.php",
+	  "src/gzip.php",
+	  "src/json.php",
+	  "src/log.php",
+	  "src/rate.php",
+	  "src/serve.php",
+	  "src/auth/basic.php",
+	  "src/auth/token.php",
+	  "src/auth/jwt.php",
+	  "src/auth/apikey.php"
+	]
+  }
+}
