@@ -17,9 +17,9 @@ test('json: JSON字符串转换为数组', function() {
     return middleware(json(), '{"key":"value"}');
 }, ['key' => 'value']);
 
-test('json: 设置Content-Type', function() {
+test('json: 设置type为json', function() {
     middleware(json(), ['test' => 123]);
-    return container('#out.response.headers.Content-Type');
-}, fn($v) => str_contains($v ?? '', 'application/json'));
+    return (container('#out.op')[1] ?? [])['type'] ?? null;
+}, 'json');
 container('#out.render', fn() => null);
 test();

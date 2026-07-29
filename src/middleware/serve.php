@@ -10,24 +10,8 @@ function serve(string $root, null|false|int|string|array $cache = null): callabl
 		$file = $root . $uri;
 		if(is_dir($file)) $file .= '/index.html';
 		if(!file_exists($file) || !is_file($file)) return $next();
-		static $types = [
-			'html' => 'text/html',
-			'htm' => 'text/html',
-			'txt' => 'text/plain',
-			'css' => 'text/css',
-			'js' => 'application/javascript',
-			'json' => 'application/json',
-			'png' => 'image/png',
-			'jpg' => 'image/jpeg',
-			'gif' => 'image/gif',
-			'svg' => 'image/svg+xml',
-			'ico' => 'image/x-icon',
-			'woff' => 'font/woff',
-			'woff2' => 'font/woff2',
-			'ttf' => 'font/ttf',
-			'zip' => 'application/zip',
-		];
-		$contentType = container("#web/static/mimes.$ext") ?? $types[$ext] ?? (mime_content_type($file) || 'application/octet-stream');
+		$mimes = container('#web/static/mimes') ?? [];
+		$contentType = $mimes[$ext] ?? mime_content_type($file) ?? 'application/octet-stream';
 		$cfg = $cache ?? container('#web/static/cache');
 		[$control, $age] = match (true) {
 			false === $cfg => [false, 0],
@@ -43,12 +27,12 @@ function serve(string $root, null|false|int|string|array $cache = null): callabl
 				$mtime = filemtime($file);
 				if(str_contains($control, 'etag')){
 					$tag = '"' . $mtime . '-' . filesize($file) . '"';
-					if(from('if-none-match', 'header') === $tag) return output(null, ['code' => 304, 'type' => 'http']);
+					if(from('if-none-match', 'header') === $tag) return output(null, ['code' => 304, 'type' => 'raw']);
 					$headers['ETag'] = $tag;
 				}
 				if(str_contains($control, 'modified')){
 					$lm = gmdate('D, d M Y H:i:s', $mtime) . ' GMT';
-					if(from('if-modified-since', 'header') === $lm) return output(null, ['code' => 304, 'type' => 'http']);
+					if(from('if-modified-since', 'header') === $lm) return output(null, ['code' => 304, 'type' => 'raw']);
 					$headers['Last-Modified'] = $lm;
 				}
 			}
@@ -56,7 +40,7 @@ function serve(string $root, null|false|int|string|array $cache = null): callabl
 		}
 		$content = file_get_contents($file);
 		$headers['Content-Length'] = strlen($content);
-		output($content, ['type' => 'http', 'headers' => $headers]);
-		return $content;
+		output($content, ['code' => 200, 'type' => 'raw', 'headers' => $headers]);
+		return null;
 	};
 }

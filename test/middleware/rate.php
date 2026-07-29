@@ -29,7 +29,7 @@ test('rate: 超出限制返回429',
 		container('#in.input', null);
 		middleware(rate(1, 60, 'test'), 'ok');
 		middleware(rate(1, 60, 'test'), 'ok');
-		return container('#out.response.code');
+		return (container('#out.op')[1] ?? [])['code'] ?? 200;
 	},
 	429);
 

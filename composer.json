@@ -12,7 +12,8 @@
   ],
   "require":{
 	"php":">=8.4",
-	"veasin/ff":">=0.3.1"
+    "ext-fileinfo":"*",
+	"veasin/ff":">=0.3.8"
   },
   "autoload":{
 	"psr-4":{
@@ -34,7 +35,8 @@
 	  "src/user.php",
 	  "src/user/session.php",
 	  "src/user/token.php",
-	  "src/user/jwt.php"
+	  "src/user/jwt.php",
+	  "bootstrap.php"
 	]
   }
 }

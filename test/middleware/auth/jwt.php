@@ -19,11 +19,11 @@ test('jwt: 无 token 返回401',
 		container('#web/auth/secret', 'test-secret');
 		container('#web/auth/validators', [fn($payload) => ($payload['sub'] ?? null) === 'user1' ? 'user1' : null]);
 		container('#web/auth/user', null);
-		container('#out.response', null);
+		container('#out.op', null);
 		container('#in.headers', null);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		middleware(jwt(), 'ok');
-		return container('#out.response.code');
+		return (container('#out.op')[1] ?? [])['code'] ?? 200;
 	},
 	401);
 
@@ -33,7 +33,7 @@ test('jwt: 认证成功返回结果',
 		container('#web/auth/secret', 'test-secret');
 		container('#web/auth/validators', [fn($payload) => ($payload['sub'] ?? null) === 'user1' ? 'user1' : null]);
 		container('#web/auth/user', null);
-		container('#out.response', null);
+		container('#out.op', null);
 		container('#in.headers', null);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
@@ -47,12 +47,12 @@ test('jwt: 签名错误返回403',
 		container('#web/auth/secret', 'test-secret');
 		container('#web/auth/validators', [fn($payload) => ($payload['sub'] ?? null) === 'user1' ? 'user1' : null]);
 		container('#web/auth/user', null);
-		container('#out.response', null);
+		container('#out.op', null);
 		container('#in.headers', null);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
 		middleware(jwt(), 'ok');
-		return container('#out.response.code');
+		return (container('#out.op')[1] ?? [])['code'] ?? 200;
 	},
 	403);
 test();

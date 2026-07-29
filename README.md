@@ -281,7 +281,7 @@ middleware(gzip(9), $handler);//最高压缩级别
 
 ## json(pretty) — JSON 格式化
 
-将返回值转为 JSON 并设置 `Content-Type: application/json; charset=UTF-8`。
+将返回值转为 JSON 输出（Content-Type 由 ff 的 json type handler 自动设置）。
 
 ```php
 middleware(json(), $handler);//默认输出
@@ -306,7 +306,7 @@ middleware(log('warning'), $handler);//自定义级别
 - **`$level`**: `string` 默认 `'info'` 日志级别
 
 容器配置：
-- **`#out.response:code`**: `int` - 读取响应状态码（默认 200）
+- **`#out.op`**: `array` - 读取输出操作的元数据，`[1]['code']` 为响应状态码
 
 ---
 

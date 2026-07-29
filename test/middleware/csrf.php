@@ -24,7 +24,7 @@ test('csrf: 验证失败返回419',
 		container('#web/csrf/token', 'test_token_123');
 		container('#in.body', ['_token' => 'wrong_token', 'RAW' => '']);
 		middleware(csrf(verify: true), 'ok');
-		return container('#out.response.code');
+		return (container('#out.op')[1] ?? [])['code'] ?? 200;
 	},
 	419);
 test();
