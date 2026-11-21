@@ -70,4 +70,4 @@ test('jwt: destroy is no-op', function() use ($storage) {
     $storage['destroy']('any');
 }, fn() => true);
 
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

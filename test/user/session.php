@@ -38,4 +38,4 @@ test('session: read returns null when no user', function() use ($storage) {
     return $storage['read']('any');
 }, null);
 
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

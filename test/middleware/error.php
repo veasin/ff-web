@@ -84,4 +84,4 @@ test('error: 多异常类型映射', function() {
     return $meta['code'] === 422 && ($meta['message'] ?? '') === '领域错误';
 }, true);
 
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

@@ -8,7 +8,7 @@ function token(string $prefix = '#web/auth', string $headerName = 'Authorization
 	return function($next) use ($prefix, $headerName){
 		if(container("$prefix/user")) return $next();
 		$rawToken = from($headerName, 'header') ?? from('token', 'query');
-		$token = str_starts_with($rawToken, 'Bearer ') ? substr($rawToken, 7) : $rawToken;
+		$token = is_string($rawToken) ? (str_starts_with($rawToken, 'Bearer ') ? substr($rawToken, 7) : $rawToken) : null;
 		if(!$token) return output(null, ['code' => 401, 'headers' => ['WWW-Authenticate' => 'Bearer realm="' . i18n('#ff.auth.realm_token') . '"']]);
 		foreach(container("$prefix/validators") ?? [] as $validator){
 			$result = $validator($token);

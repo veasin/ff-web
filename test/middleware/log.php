@@ -19,7 +19,7 @@ test('log: 记录请求方法',
 		middleware(mw_log(), 'ok');
 		return $logged[0]['message']['method'] ?? null;
 	},
-	'cli');
+	'get');
 
 test('log: 记录响应状态',
 	function() use (&$logged){
@@ -53,4 +53,4 @@ test('log: 使用指定级别',
 		return $logged[0]['level'] ?? null;
 	},
 	'warning');
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

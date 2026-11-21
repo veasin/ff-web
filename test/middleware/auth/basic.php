@@ -54,4 +54,4 @@ test('auth_basic: 密码含冒号正确解析',
 		return middleware(basic(), 'ok');
 	},
 	'ok');
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

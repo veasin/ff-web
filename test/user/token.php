@@ -63,4 +63,4 @@ test('token: token returns null without header', function() use ($storage) {
     return $storage['token']();
 }, null);
 
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

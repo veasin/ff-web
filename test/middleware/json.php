@@ -2,7 +2,7 @@
 // json.php 测试
 include __DIR__ . "/../../vendor/autoload.php";
 
-use function ff\{middleware, test, container};
+use function ff\{middleware, test, container, hook};
 use function ff\web\middleware\json;
 
 test('json: null返回null', function() {
@@ -22,4 +22,5 @@ test('json: 设置type为json', function() {
     return (container('#out.op')[1] ?? [])['type'] ?? null;
 }, 'json');
 container('#out.render', fn() => null);
-test();
+hook('after', static fn() => container('#out.op', null), 500);
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

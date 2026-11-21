@@ -11,9 +11,9 @@
 	}
   ],
   "require":{
-	"php":">=8.4",
+	"php":">=8.6",
     "ext-fileinfo":"*",
-	"veasin/ff":">=0.3.8"
+	"veasin/ff":">=0.5.0"
   },
   "autoload":{
 	"psr-4":{

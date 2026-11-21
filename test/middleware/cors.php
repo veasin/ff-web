@@ -19,7 +19,8 @@ test('cors: 自定义 origin',
 	'https://example.com');
 test('cors: OPTIONS 请求返回 ok',
 	function(){
-		return container('#mode:cli') ? ['ok' => true] : null;
+		container('#in.input', ['method' => 'OPTIONS']);
+		return middleware(cors(), 'ok');
 	},
-	fn($v) => $v === ['ok' => true]);
-test();
+	['ok' => true]);
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

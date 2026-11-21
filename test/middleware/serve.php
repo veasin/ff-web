@@ -2,7 +2,7 @@
 // serve.php 测试
 include __DIR__ . "/../../vendor/autoload.php";
 
-use function ff\{middleware, test, container, from};
+use function ff\{middleware, test, container, from, hook};
 use function ff\web\middleware\serve;
 
 $testDir = __DIR__ . '/_test_static';
@@ -10,8 +10,6 @@ $testDir = __DIR__ . '/_test_static';
 file_put_contents($testDir . '/test.txt', 'test content');
 file_put_contents($testDir . '/test.js', 'var a = 1;');
 file_put_contents($testDir . '/index.html', '<h1>Index</h1>');
-
-container(null);
 
 test('serve: 静态文件存在时返回内容', function() use ($testDir) {
 	container('#in.input', ['method' => 'GET', 'uri' => '/test.txt']);
@@ -109,11 +107,14 @@ test('serve: js文件Content-Type正确', function() use ($testDir) {
 	return (container('#out.op')[1] ?? [])['headers']['Content-Type'] ?? null;
 }, 'application/javascript');
 
-test();
 
 container('#out.render', fn() => null);
 
-@unlink($testDir . '/test.txt');
-@unlink($testDir . '/test.js');
-@unlink($testDir . '/index.html');
-@rmdir($testDir);
+hook('after', static function() use ($testDir): void{
+	@unlink($testDir . '/test.txt');
+	@unlink($testDir . '/test.js');
+	@unlink($testDir . '/index.html');
+	@rmdir($testDir);
+}, 600);
+hook('after', static fn() => container('#out.op', null), 500);
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

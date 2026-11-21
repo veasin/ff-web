@@ -55,4 +55,4 @@ test('jwt: 签名错误返回403',
 		return (container('#out.op')[1] ?? [])['code'] ?? 200;
 	},
 	403);
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

@@ -58,4 +58,4 @@ test('user: check throws on unknown storage', fn() => user(true, '__unknown__'),
 test('user: read throws on unknown storage', fn() => user(null, '__unknown__'), \RuntimeException::class);
 test('user: destroy throws on unknown storage', fn() => user(false, '__unknown__'), \RuntimeException::class);
 
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

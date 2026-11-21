@@ -27,4 +27,4 @@ test('csrf: 验证失败返回419',
 		return (container('#out.op')[1] ?? [])['code'] ?? 200;
 	},
 	419);
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

@@ -47,4 +47,4 @@ test('rate: 不同IP独立计数',
 		return middleware(rate(1, 60, 'ip'), 'ok');
 	},
 	'ok');
-test();
+test() |> json_encode(?, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) |> printf(...);

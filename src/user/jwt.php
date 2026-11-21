@@ -28,14 +28,14 @@ function jwt(string $secret, int $ttl = 86400, string $algo = 'HS256'): array
 			if (hash_hmac('sha256', "{$h}.{$p}", $secret, true)
 				!== safe(fn() => base64_decode(strtr($s, '-_', '+/'))))
 				return null;
-			$payload = json_decode(base64_decode(strtr($p, '-_', '+/')), true);
+			$payload = strtr($p, '-_', '+/') |> base64_decode(...) |> json_decode(?, true);
 			if (!$payload || ($payload['exp'] ?? 0) < time()) return null;
 			return $payload;
 		},
 		'write'   => function(object|array $user) use ($secret, $ttl): string{
-			$header = rtrim(base64_encode(json_encode(['alg' => 'HS256', 'typ' => 'JWT'])), '=');
-			$payload = rtrim(base64_encode(json_encode(['user' => $user, 'exp' => time() + $ttl, 'iat' => time()])), '=');
-			$signature = rtrim(base64_encode(hash_hmac('sha256', "{$header}.{$payload}", $secret, true)), '=');
+			$header = ['alg' => 'HS256', 'typ' => 'JWT'] |> json_encode(...) |> base64_encode(...) |> rtrim(?, '=');
+			$payload = ['user' => $user, 'exp' => time() + $ttl, 'iat' => time()]|> json_encode(...)|> base64_encode(...)|> rtrim(?, '=');
+			$signature = hash_hmac('sha256', "{$header}.{$payload}", $secret, true)|> base64_encode(...)|> rtrim(?, '=');
 			return "{$header}.{$payload}.{$signature}";
 		},
 		'destroy' => function(string $token): void{},
@@ -45,7 +45,7 @@ function jwt(string $secret, int $ttl = 86400, string $algo = 'HS256'): array
 			[$h, $p, $s] = $parts;
 			$sig = safe(fn() => base64_decode(strtr($s, '-_', '+/')));
 			if (!$sig || !hash_equals(hash_hmac('sha256', "{$h}.{$p}", $secret, true), $sig)) return false;
-			$payload = json_decode(base64_decode(strtr($p, '-_', '+/')), true);
+			$payload = strtr($p, '-_', '+/')|> base64_decode(...)|> json_decode(?, true);
 			return $payload && ($payload['exp'] ?? 0) >= time();
 		},
 	];
