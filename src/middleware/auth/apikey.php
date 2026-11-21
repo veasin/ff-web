@@ -1,7 +1,7 @@
 <?php
 namespace ff\web\middleware\auth;
 
-use function ff\{container, from, output, i18n};
+use function ff\{container, from, i18n, output};
 
 function apikey(string $prefix = '#web/auth', string $headerName = 'X-API-Key', string $queryName = 'api_key'): callable{
 	$headerName = strtolower(str_replace('_', '-', $headerName));

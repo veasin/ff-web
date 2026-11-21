@@ -1,6 +1,7 @@
 <?php
 namespace ff\web\middleware;
-use function ff\{from, output};
+
+use function ff\{output};
 
 function json(bool $pretty = false): callable{
 	return function($next) use ($pretty){

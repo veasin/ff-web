@@ -55,14 +55,14 @@ test('jwt: check returns false for expired token', function() use ($storage, $se
 }, false);
 
 test('jwt: token reads from Authorization header', function() use ($storage) {
-    container('#in.headers', ['authorization' => 'Bearer jwt-token-123']);
+    container('#in.header', ['authorization' => 'Bearer jwt-token-123']);
     $result = $storage['token']();
-    container('#in.headers', null);
+    container('#in.header', []);
     return $result;
 }, 'jwt-token-123');
 
 test('jwt: token returns null without header', function() use ($storage) {
-    container('#in.headers', null);
+    container('#in.header', []);
     return $storage['token']();
 }, null);
 

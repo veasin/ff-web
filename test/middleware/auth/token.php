@@ -10,7 +10,7 @@ test('token: 无 token 返回401',
 		container('#web/auth/validators', [fn($token) => $token === 'valid-token' ? 'user1' : null]);
 		container('#web/auth/user', null);
 		container('#out.op', null);
-		container('#in.headers', null);
+		container('#in.header', []);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		middleware(token(), 'ok');
 		return (container('#out.op')[1] ?? [])['code'] ?? 200;
@@ -22,7 +22,7 @@ test('token: 认证成功返回结果',
 		container('#web/auth/validators', [fn($token) => $token === 'valid-token' ? 'user1' : null]);
 		container('#web/auth/user', null);
 		container('#out.op', null);
-		container('#in.headers', null);
+		container('#in.header', ['authorization' => 'Bearer valid-token']);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer valid-token';
 		return middleware(token(), 'ok');
@@ -34,7 +34,7 @@ test('token: 无效 token 返回403',
 		container('#web/auth/validators', [fn($token) => $token === 'valid-token' ? 'user1' : null]);
 		container('#web/auth/user', null);
 		container('#out.op', null);
-		container('#in.headers', null);
+		container('#in.header', ['authorization' => 'Bearer invalid-token']);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Bearer invalid-token';
 		middleware(token(), 'ok');

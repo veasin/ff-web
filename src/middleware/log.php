@@ -1,15 +1,13 @@
 <?php
 namespace ff\web\middleware;
-use function ff\{from, container, log as flog};
+
+use function ff\{container, from, log as flog};
 
 function log(string $level = 'info'): callable{
 	$start = microtime(true);
 	$memStart = memory_get_usage();
 	return function($next) use ($level, &$start, &$memStart){
-		$request = [
-			'method' => from('method', 'input'),
-			'uri' => from('uri', 'input'),
-		];
+		$request = ['method' => from('method', 'input'), 'uri' => from('uri', 'input')];
 		$result = $next();
 		$duration = round((microtime(true) - $start) * 1000, 2);
 		$memory = round((memory_get_usage() - $memStart) / 1024, 2);

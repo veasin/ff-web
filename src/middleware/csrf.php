@@ -1,7 +1,7 @@
 <?php
 namespace ff\web\middleware;
 
-use function ff\{container, from, output, i18n};
+use function ff\{container, from, i18n, output};
 
 function csrf(bool $verify = false): callable{
 	return function($next) use ($verify){

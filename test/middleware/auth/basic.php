@@ -10,7 +10,7 @@ test('auth_basic: 未认证返回401',
 		container('#web/auth/validators', [fn($user, $pass) => $user === 'admin' && $pass === '123456' ? 'admin' : null]);
 		container('#web/auth/user', null);
 		container('#out.op', null);
-		container('#in.headers', null);
+		container('#in.header', []);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['HTTP_AUTHORIZATION'] = '';
 		middleware(basic(), 'ok');
@@ -23,7 +23,7 @@ test('auth_basic: 认证成功返回结果',
 		container('#web/auth/validators', [fn($user, $pass) => $user === 'admin' && $pass === '123456' ? 'admin' : null]);
 		container('#web/auth/user', null);
 		container('#out.op', null);
-		container('#in.headers', null);
+		container('#in.header', ['authorization' => 'Basic ' . base64_encode('admin:123456')]);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('admin:123456');
 		return middleware(basic(), 'ok');
@@ -35,7 +35,7 @@ test('auth_basic: 密码错误返回403',
 		container('#web/auth/validators', [fn($user, $pass) => $user === 'admin' && $pass === '123456' ? 'admin' : null]);
 		container('#web/auth/user', null);
 		container('#out.op', null);
-		container('#in.headers', null);
+		container('#in.header', ['authorization' => 'Basic ' . base64_encode('admin:wrong')]);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('admin:wrong');
 		middleware(basic(), 'ok');
@@ -48,7 +48,7 @@ test('auth_basic: 密码含冒号正确解析',
 		container('#web/auth/validators', [fn($user, $pass) => $user === 'admin' && $pass === 'pass:word:123' ? 'admin' : null]);
 		container('#web/auth/user', null);
 		container('#out.op', null);
-		container('#in.headers', null);
+		container('#in.header', ['authorization' => 'Basic YWRtaW46cGFzczp3b3JkOjEyMw==']);
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$_SERVER['HTTP_AUTHORIZATION'] = 'Basic YWRtaW46cGFzczp3b3JkOjEyMw==';
 		return middleware(basic(), 'ok');

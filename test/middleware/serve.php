@@ -55,6 +55,7 @@ test('serve: int作为max-age', function() use ($testDir) {
 
 test('serve: ETag条件缓存', function() use ($testDir) {
 	container('#in.input', ['method' => 'GET', 'uri' => '/test.txt']);
+	container('#in.header', []);
 	middleware(serve($testDir, 'etag'), 'not found');
 	return (container('#out.op')[1] ?? [])['headers']['ETag'] ?? null;
 }, fn($v) => $v !== null && str_starts_with($v, '"'));
@@ -64,7 +65,7 @@ test('serve: ETag匹配返回304', function() use ($testDir) {
 	$mtime = filemtime($file);
 	$expectedTag = '"' . $mtime . '-' . filesize($file) . '"';
 	container('#in.input', ['method' => 'GET', 'uri' => '/test.txt']);
-	container('#in.headers', ['if-none-match' => $expectedTag]);
+	container('#in.header', ['if-none-match' => $expectedTag]);
 	middleware(serve($testDir, 'etag'), 'not found');
 	return (container('#out.op')[1] ?? [])['code'] ?? 200;
 }, 304);
@@ -79,14 +80,14 @@ test('serve: Modified匹配返回304', function() use ($testDir) {
 	$file = $testDir . '/test.txt';
 	$expectedLm = gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT';
 	container('#in.input', ['method' => 'GET', 'uri' => '/test.txt']);
-	container('#in.headers', ['if-modified-since' => $expectedLm]);
+	container('#in.header', ['if-modified-since' => $expectedLm]);
 	middleware(serve($testDir, 'modified'), 'not found');
 	return (container('#out.op')[1] ?? [])['code'] ?? 200;
 }, 304);
 
 test('serve: 数组配置 control + age', function() use ($testDir) {
 	container('#in.input', ['method' => 'GET', 'uri' => '/test.txt']);
-	container('#in.headers', []);
+	container('#in.header', []);
 	container('#out.op', null);
 	middleware(serve($testDir, ['control' => 'etag,modified', 'age' => 86400]), 'not found');
 	$h = (container('#out.op')[1] ?? [])['headers'] ?? [];

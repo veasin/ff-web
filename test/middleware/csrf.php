@@ -8,6 +8,8 @@ use function ff\web\middleware\csrf;
 test('csrf: 生成 token',
 	function(){
 		container('#web/csrf/token', null);
+		container('#in.header', []);
+		container('#in.body', []);
 		$result = middleware(csrf(), ['data' => 'test']);
 		return strlen($result['_token'] ?? '');
 	},

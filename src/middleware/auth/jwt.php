@@ -1,7 +1,7 @@
 <?php
 namespace ff\web\middleware\auth;
 
-use function ff\{container, from, output, i18n};
+use function ff\{container, from, i18n, output};
 
 function jwt(string $prefix = '#web/auth', string $algo = 'HS256'): callable{
 	return function($next) use ($prefix, $algo){
@@ -12,7 +12,7 @@ function jwt(string $prefix = '#web/auth', string $algo = 'HS256'): callable{
 		$parts = explode('.', $token);
 		if(count($parts) !== 3) return output(null, 401);
 		[$headerB64, $payloadB64, $sigB64] = $parts;
-		$payload = json_decode(base64_decode(strtr($payloadB64, '-_', '+/')), true);
+		$payload = strtr($payloadB64, '-_', '+/')|> base64_decode(...)|> json_decode(?, true);
 		$sig = base64_decode(strtr($sigB64, '-_', '+/'));
 		$secret = container("$prefix/secret") ?? '';
 		$expectedSig = hash_hmac($algo === 'HS256' ? 'sha256' : 'sha512', "$headerB64.$payloadB64", $secret, true);

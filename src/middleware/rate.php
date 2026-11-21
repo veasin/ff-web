@@ -1,6 +1,7 @@
 <?php
 namespace ff\web\middleware;
-use function ff\{from, output, container, i18n};
+
+use function ff\{container, from, i18n, output};
 use function ff\cache\apcu;
 
 function rate(int $maxRequests = 60, int $windowSeconds = 60, string $key = 'rate'): callable{

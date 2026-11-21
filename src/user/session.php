@@ -8,13 +8,12 @@ namespace ff\web\user;
  * ```
  * @return array
  */
-function session(): array
-{
+function session(): array{
 	return [
-		'token'   => fn(): ?string => session_id() ?: null,
-		'read'    => fn(string $token): ?array => $_SESSION['#user'] ?? null,
-		'check'   => fn(string $token): bool => isset($_SESSION['#user']),
-		'write'   => function(object|array $user): string{
+		'token' => fn(): ?string => session_id() ?: null,
+		'read' => fn(string $token): ?array => $_SESSION['#user'] ?? null,
+		'check' => fn(string $token): bool => isset($_SESSION['#user']),
+		'write' => function(object|array $user): string{
 			$_SESSION['#user'] = $user;
 			return session_id();
 		},

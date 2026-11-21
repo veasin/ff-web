@@ -52,14 +52,14 @@ test('token: destroy removes data from provider', function() use ($storage, &$st
 }, null);
 
 test('token: token reads from Authorization header', function() use ($storage) {
-    container('#in.headers', ['authorization' => 'Bearer test-token-123']);
+    container('#in.header', ['authorization' => 'Bearer test-token-123']);
     $result = $storage['token']();
-    container('#in.headers', null);
+    container('#in.header', []);
     return $result;
 }, 'test-token-123');
 
 test('token: token returns null without header', function() use ($storage) {
-    container('#in.headers', null);
+    container('#in.header', []);
     return $storage['token']();
 }, null);
 

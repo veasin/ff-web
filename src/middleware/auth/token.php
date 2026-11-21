@@ -1,7 +1,7 @@
 <?php
 namespace ff\web\middleware\auth;
 
-use function ff\{container, from, output, i18n};
+use function ff\{container, from, i18n, output};
 
 function token(string $prefix = '#web/auth', string $headerName = 'Authorization'): callable{
 	$headerName = strtolower(str_replace('-', '_', $headerName));
